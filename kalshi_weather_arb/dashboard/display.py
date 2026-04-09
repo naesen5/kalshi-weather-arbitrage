@@ -206,6 +206,8 @@ class Dashboard:
         daily_exposure_max: Optional[float] = None,
     ) -> None:
         """Update the dashboard with new data."""
+        from rich.console import NewLine
+
         self.live.update(
             self.render_system_status(
                 last_scan_time,
@@ -215,8 +217,10 @@ class Dashboard:
                 daily_exposure_used,
                 daily_exposure_max,
             ),
+            NewLine(),
             self.render_scan_results(scan_results or []),
+            NewLine(),
             self.render_open_positions(open_positions or []),
+            NewLine(),
             self.render_recent_trades(ledger or []),
-            refresh=True,
         )
