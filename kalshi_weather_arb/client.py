@@ -33,7 +33,9 @@ class KalshiClient:
         ).hexdigest()
         return f"HMAC {self.api_key}:{timestamp}:{signature}"
 
-    def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def get(
+        self, endpoint: str, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """GET request with signing."""
         path = endpoint.lstrip("/")
         signature = self._sign_request("GET", path)

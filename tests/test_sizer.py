@@ -1,6 +1,5 @@
 """Tests for sizer module."""
 
-
 from kalshi_weather_arb.sizer import Sizer
 
 

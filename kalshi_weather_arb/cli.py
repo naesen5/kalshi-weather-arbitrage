@@ -15,8 +15,12 @@ def parse_args() -> argparse.Namespace:
 
     # run command
     run_parser = subparsers.add_parser("run", help="Run the arbitrage loop")
-    run_parser.add_argument("--dashboard", action="store_true", help="Enable live dashboard view")
-    run_parser.add_argument("--dry-run", action="store_true", help="Run in dry-run mode")
+    run_parser.add_argument(
+        "--dashboard", action="store_true", help="Enable live dashboard view"
+    )
+    run_parser.add_argument(
+        "--dry-run", action="store_true", help="Run in dry-run mode"
+    )
     run_parser.add_argument("--api-key", required=True, help="Kalshi API key")
     run_parser.add_argument("--secret-key", required=True, help="Kalshi secret key")
 
@@ -43,7 +47,9 @@ def run_loop(dashboard: bool, dry_run: bool, api_key: str, secret_key: str) -> N
             # Simulate trader
             if results:
                 # Place a bet on first result
-                trader.place_bet(results[0].get("id", "unknown"), 100.0, dry_run=dry_run)
+                trader.place_bet(
+                    results[0].get("id", "unknown"), 100.0, dry_run=dry_run
+                )
                 if dashboard:
                     dash.update(ledger=trader.ledger)
 

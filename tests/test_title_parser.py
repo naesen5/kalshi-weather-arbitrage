@@ -1,6 +1,5 @@
 """Tests for title parser module."""
 
-
 from kalshi_weather_arb.title_parser import parse_title
 
 

@@ -16,7 +16,19 @@ class TestCLI:
 
     def test_parse_args_run_with_flags(self):
         """Test parsing run command with flags."""
-        with patch("sys.argv", ["kalshi_weather_arb", "run", "--dashboard", "--dry-run", "--api-key", "test", "--secret-key", "test"]):
+        with patch(
+            "sys.argv",
+            [
+                "kalshi_weather_arb",
+                "run",
+                "--dashboard",
+                "--dry-run",
+                "--api-key",
+                "test",
+                "--secret-key",
+                "test",
+            ],
+        ):
             args = parse_args()
             assert args.command == "run"
             assert args.dashboard is True

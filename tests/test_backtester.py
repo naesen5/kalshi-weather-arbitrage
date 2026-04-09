@@ -1,6 +1,5 @@
 """Tests for backtester — synthetic data, assert P&L calculation."""
 
-
 from kalshi_weather_arb.client import KalshiClient  # noqa: F401
 
 

@@ -93,7 +93,9 @@ class Dashboard:
     def render_open_positions(self, positions: List[Dict[str, Any]]) -> Panel:
         """Render open positions as a rich panel."""
         if not positions:
-            return Panel("[dim]No open positions[/dim]", title="Open Positions", box=box.ROUNDED)
+            return Panel(
+                "[dim]No open positions[/dim]", title="Open Positions", box=box.ROUNDED
+            )
 
         table = Table(box=box.ROUNDED, show_header=True, header_style="bold cyan")
         table.add_column("Ticker", style="magenta")
@@ -116,7 +118,9 @@ class Dashboard:
     def render_recent_trades(self, ledger: List[Dict[str, Any]]) -> Panel:
         """Render recent trades (last 10) as a rich panel."""
         if not ledger:
-            return Panel("[dim]No trades yet[/dim]", title="Recent Trades", box=box.ROUNDED)
+            return Panel(
+                "[dim]No trades yet[/dim]", title="Recent Trades", box=box.ROUNDED
+            )
 
         recent = ledger[-10:]
         table = Table(box=box.ROUNDED, show_header=True, header_style="bold cyan")
@@ -135,7 +139,13 @@ class Dashboard:
             result = "WIN" if win else "LOSS"
 
             style = "green" if win else "red"
-            table.add_row(timestamp, str(contract_id), f"${amount:.2f}", f"${profit:.2f}", Text(result, style=style))
+            table.add_row(
+                timestamp,
+                str(contract_id),
+                f"${amount:.2f}",
+                f"${profit:.2f}",
+                Text(result, style=style),
+            )
 
         return Panel(table, title="Recent Trades", box=box.ROUNDED)
 
@@ -156,7 +166,9 @@ class Dashboard:
         lines = [f"[bold]Mode:[/bold] {mode}"]
 
         if last_scan_time:
-            lines.append(f"[bold]Last Scan:[/bold] {last_scan_time.strftime('%H:%M:%S')}")
+            lines.append(
+                f"[bold]Last Scan:[/bold] {last_scan_time.strftime('%H:%M:%S')}"
+            )
 
         if next_scan_seconds is not None:
             lines.append(f"[bold]Next Scan:[/bold] in {next_scan_seconds}s")
@@ -168,8 +180,16 @@ class Dashboard:
             lines.append(f"[bold]Daily P&L:[/bold] ${daily_pl:+.2f}")
 
         if daily_exposure_used is not None and daily_exposure_max is not None:
-            pct = (daily_exposure_used / daily_exposure_max * 100) if daily_exposure_max > 0 else 0
-            lines.append(f"[bold]Daily Exposure:[/bold] ${daily_exposure_used:.0f}/{daily_exposure_max:.0f} ({pct:.0f}%)")
+            pct = (
+                (daily_exposure_used / daily_exposure_max * 100)
+                if daily_exposure_max > 0
+                else 0
+            )
+            lines.append(
+                f"[bold]Daily Exposure:[/bold] ${daily_exposure_used:.0f}/"
+                f"{daily_exposure_max:.0f} "
+                f"({pct:.0f}%)"
+            )
 
         return Panel("\n".join(lines), title="System Status", box=box.ROUNDED)
 

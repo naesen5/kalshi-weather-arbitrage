@@ -1,6 +1,5 @@
 """Tests for probability model module."""
 
-
 from kalshi_weather_arb.probability_model import ProbabilityModel
 
 

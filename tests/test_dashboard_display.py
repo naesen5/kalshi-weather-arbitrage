@@ -6,8 +6,6 @@ from io import StringIO
 from rich.console import Console
 
 
-
-
 from kalshi_weather_arb.dashboard.display import Dashboard
 
 
