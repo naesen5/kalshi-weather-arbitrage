@@ -1,8 +1,6 @@
 """CLI — command-line interface for kalshi-weather-arbitrage."""
 
 import argparse
-import json
-from typing import Any, Dict, List, Optional
 
 from kalshi_weather_arb.client import KalshiClient
 from kalshi_weather_arb.dashboard.display import Dashboard

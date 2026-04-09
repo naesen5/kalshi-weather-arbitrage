@@ -1,8 +1,7 @@
 """METAR client — fetch weather data from aviationweather.gov."""
 
-import json
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from datetime import datetime
+from typing import Any, Dict, List
 
 import requests
 

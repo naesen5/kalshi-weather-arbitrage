@@ -2,7 +2,6 @@
 
 from unittest.mock import Mock, patch
 
-import pytest
 
 from kalshi_weather_arb.trader import Trader  # noqa: F401
 

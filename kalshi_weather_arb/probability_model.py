@@ -1,6 +1,6 @@
 """Probability model — three-tier confidence system."""
 
-from typing import Dict
+from typing import Any, Dict
 
 
 class ProbabilityModel:

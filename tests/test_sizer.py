@@ -1,38 +1,39 @@
-"""Tests for sizer — Kelly calc, exposure cap, circuit breaker."""
+"""Tests for sizer module."""
 
-import pytest
 
-from kalshi_weather_arb.client import KalshiClient  # noqa: F401
+from kalshi_weather_arb.sizer import Sizer
 
 
 class TestSizer:
-    """Test sizer logic for exposure management."""
+    """Test Sizer class."""
+
+    def test_init(self):
+        """Test initialization."""
+        sizer = Sizer(edge=0.05, exposure_cap=100.0, circuit_breaker=500.0)
+        assert sizer.edge == 0.05
+        assert sizer.exposure_cap == 100.0
+        assert sizer.circuit_breaker == 500.0
 
     def test_kelly_calculation(self):
-        """Test Kelly formula for optimal bet sizing."""
-        # Kelly fraction = (p * (b + 1) - 1) / b
-        # p = win probability, b = odds
-        p = 0.6
-        b = 1.5  # 3/2 odds
+        """Test kelly calculation."""
+        sizer = Sizer(edge=0.05)
+        result = sizer.kelly(odds=2.0)
+        assert result > 0
 
-        kelly_fraction = (p * (b + 1) - 1) / b
-        expected = 0.3333333333333333
-
-        assert abs(kelly_fraction - expected) < 0.01
+    def test_kelly_zero_odds(self):
+        """Test kelly with odds <= 1 returns 0."""
+        sizer = Sizer()
+        assert sizer.kelly(odds=1.0) == 0
+        assert sizer.kelly(odds=0.5) == 0
 
     def test_exposure_cap(self):
-        """Test exposure cap logic."""
-        max_exposure = 1000.0
-        current_exposure = 800.0
-        proposed_bet = 250.0
-
-        assert current_exposure + proposed_bet > max_exposure
-        # Should reject bet that exceeds cap
+        """Test exposure cap limits bet."""
+        sizer = Sizer(edge=0.1, exposure_cap=50.0, circuit_breaker=1000.0)
+        bet = sizer.size_bet(odds=2.0, max_bet=1000.0)
+        assert bet <= 50.0
 
     def test_circuit_breaker(self):
-        """Test circuit breaker for rapid successive losses."""
-        consecutive_losses = 5
-        threshold = 3
-
-        assert consecutive_losses >= threshold
-        # Circuit breaker should trip
+        """Test circuit breaker limits bet."""
+        sizer = Sizer(edge=0.01, exposure_cap=None, circuit_breaker=100.0)
+        bet = sizer.size_bet(odds=2.0, max_bet=1000.0)
+        assert bet <= 100.0

@@ -1,7 +1,7 @@
 """Title parser — parse Kalshi contract titles."""
 
 import re
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 
 def parse_title(title: str) -> Optional[Dict[str, Any]]:

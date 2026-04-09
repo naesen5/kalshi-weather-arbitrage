@@ -1,75 +1,61 @@
-"""Tests for METAR client — parsing aviation weather data, age calculation."""
+"""Tests for METAR client module."""
 
-from datetime import datetime, timedelta
+from unittest.mock import patch, MagicMock
 
-import pytest
-
-from kalshi_weather_arb.client import KalshiClient
-
-
-class MockMETARResponse:
-    """Mock METAR response fixture from aviationweather.gov."""
-
-    @staticmethod
-    def get_sample():
-        """Return sample METAR JSON fixture."""
-        return {
-            "stations": [
-                {
-                    "id": "METAR_123",
-                    "name": "Sample Station",
-                    "lat": 45.0,
-                    "lon": -90.0,
-                    "elev": 100.0,
-                    "wmo": "721412",
-                    "call": "CWTN1234",
-                    "usaf": True,
-                }
-            ],
-            "parameters": [
-                {
-                    "id": "T23",
-                    "value": "23",
-                    "dateobs": "2026-04-08T08:00:00Z",
-                }
-            ],
-        }
+from kalshi_weather_arb.metar_client import METARClient
 
 
 class TestMETARClient:
-    """Test METAR parsing and age calculation."""
+    """Test METARClient class."""
 
-    def test_parse_station(self):
-        """Test station data parsing."""
-        data = MockMETARResponse.get_sample()
-        station = data["stations"][0]
+    def test_init(self):
+        """Test initialization."""
+        client = METARClient(api_key="test-key")
+        assert client.api_key == "test-key"
+        assert client.BASE_URL == "https://api.aviationweather.gov/v1"
 
-        assert station["id"] == "METAR_123"
-        assert station["name"] == "Sample Station"
-        assert station["lat"] == 45.0
-        assert station["lon"] == -90.0
+    @patch("requests.get")
+    def test_parse_station(self, mock_get):
+        """Test fetch_station."""
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"id": "KJFK", "name": "Test Station"}
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
 
-    def test_parse_parameter(self):
-        """Test parameter data parsing."""
-        data = MockMETARResponse.get_sample()
-        param = data["parameters"][0]
+        client = METARClient(api_key="test-key")
+        result = client.fetch_station("KJFK")
+        assert result["id"] == "KJFK"
 
-        assert param["id"] == "T23"
-        assert param["value"] == "23"
-        assert param["dateobs"] == "2026-04-08T08:00:00Z"
+    @patch("requests.get")
+    def test_parse_parameter(self, mock_get):
+        """Test fetch_parameters."""
+        mock_response = MagicMock()
+        mock_response.json.return_value = [{"id": "TMP", "name": "Temperature"}]
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
+
+        client = METARClient(api_key="test-key")
+        result = client.fetch_parameters("KJFK")
+        assert len(result) == 1
 
     def test_calculate_age(self):
-        """Test METAR record age calculation."""
-        now = datetime(2026, 4, 8, 10, 0, 0)
-        obs_time = datetime.fromisoformat("2026-04-08T08:00:00+00:00")
-        age = now - obs_time.replace(tzinfo=None)
+        """Test age calculation."""
+        client = METARClient(api_key="test-key")
+        from datetime import datetime, timedelta
+        from zoneinfo import ZoneInfo
 
-        assert age == timedelta(hours=2)
+        old_time = datetime.now(ZoneInfo("UTC")) - timedelta(minutes=5)
+        age = client.calculate_age(old_time.isoformat())
+        assert 4 <= age <= 6
 
     def test_is_stale(self):
-        """Test stale METAR detection (>15 min)."""
-        now = datetime(2026, 4, 8, 10, 0, 0)
-        obs_time = datetime.fromisoformat("2026-04-08T07:40:00+00:00")
-        age = now - obs_time.replace(tzinfo=None)
+        """Test stale check."""
+        client = METARClient(api_key="test-key")
+        from datetime import datetime, timedelta
+        from zoneinfo import ZoneInfo
 
-        assert age > timedelta(minutes=15)
+        old_time = datetime.now(ZoneInfo("UTC")) - timedelta(minutes=15)
+        assert client.is_stale(old_time.isoformat(), threshold_minutes=10.0) is True
+
+        recent_time = datetime.now(ZoneInfo("UTC")) - timedelta(minutes=5)
+        assert client.is_stale(recent_time.isoformat(), threshold_minutes=10.0) is False
