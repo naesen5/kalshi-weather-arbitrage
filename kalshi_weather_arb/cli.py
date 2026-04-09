@@ -92,7 +92,10 @@ def main() -> None:
             secret_key=args.secret_key,
         )
     elif args.command == "backtest":
-        print(f"Running backtest: {args.station} {args.ticker} {args.start} to {args.end}")
+        print(
+            f"Running backtest: {args.station} {args.ticker} "
+            f"{args.start} to {args.end}"
+        )
         metar_loader = METARLoader()
         price_loader = KalshiPriceLoader(api_key="dummy")
         backtester = Backtester(metar_loader, price_loader)

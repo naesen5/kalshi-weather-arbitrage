@@ -1,6 +1,5 @@
 """Backtest engine — replay historical data and simulate bets."""
 
-from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from kalshi_weather_arb.backtest.data_loader import KalshiPriceLoader, METARLoader

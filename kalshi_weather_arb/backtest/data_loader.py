@@ -1,12 +1,8 @@
 """Data loader — historical METAR and Kalshi price data."""
 
-import csv
-import json
 import os
-from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
-import requests
 
 
 class METARLoader:
@@ -50,6 +46,10 @@ class KalshiPriceLoader:
         # For now, return synthetic data
         # TODO: Implement actual Kalshi API call
         return [
-            {"ticker": ticker, "timestamp": f"2025-01-01T{h:02d}:00:00Z", "price": 100.0 + h}
+            {
+                "ticker": ticker,
+                "timestamp": f"2025-01-01T{h:02d}:00:00Z",
+                "price": 100.0 + h,
+            }
             for h in range(24)
         ]

@@ -1,9 +1,6 @@
 """Tests for backtest data loader."""
 
-import os
-from unittest.mock import MagicMock
 
-import pytest
 
 from kalshi_weather_arb.backtest.data_loader import KalshiPriceLoader, METARLoader
 
