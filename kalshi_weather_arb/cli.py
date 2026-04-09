@@ -6,6 +6,9 @@ from kalshi_weather_arb.client import KalshiClient
 from kalshi_weather_arb.dashboard.display import Dashboard
 from kalshi_weather_arb.scanner import Scanner
 from kalshi_weather_arb.trader import Trader
+from kalshi_weather_arb.backtest.engine import Backtester
+from kalshi_weather_arb.backtest.data_loader import METARLoader, KalshiPriceLoader
+from kalshi_weather_arb.backtest.report import BacktestReport
 
 
 def parse_args() -> argparse.Namespace:
@@ -23,6 +26,23 @@ def parse_args() -> argparse.Namespace:
     )
     run_parser.add_argument("--api-key", required=True, help="Kalshi API key")
     run_parser.add_argument("--secret-key", required=True, help="Kalshi secret key")
+
+    # backtest command
+    backtest_parser = subparsers.add_parser(
+        "backtest", help="Run historical backtest"
+    )
+    backtest_parser.add_argument(
+        "--start", required=True, help="Start date (YYYY-MM-DD)"
+    )
+    backtest_parser.add_argument(
+        "--end", required=True, help="End date (YYYY-MM-DD)"
+    )
+    backtest_parser.add_argument(
+        "--station", default="KJFK", help="METAR station ID"
+    )
+    backtest_parser.add_argument(
+        "--ticker", default="KC", help="Kalshi ticker"
+    )
 
     return parser.parse_args()
 
@@ -71,6 +91,19 @@ def main() -> None:
             api_key=args.api_key,
             secret_key=args.secret_key,
         )
+    elif args.command == "backtest":
+        print(f"Running backtest: {args.station} {args.ticker} {args.start} to {args.end}")
+        metar_loader = METARLoader()
+        price_loader = KalshiPriceLoader(api_key="dummy")
+        backtester = Backtester(metar_loader, price_loader)
+        results = backtester.run_backtest(
+            station=args.station,
+            ticker=args.ticker,
+            start_date=args.start,
+            end_date=args.end,
+        )
+        report = BacktestReport()
+        report.print_summary(results)
     else:
         print("Usage: python -m kalshi_weather_arb <command>")
         print("Commands: run")
