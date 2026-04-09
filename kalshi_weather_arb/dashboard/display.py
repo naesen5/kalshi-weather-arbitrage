@@ -21,7 +21,7 @@ class Dashboard:
         self.dry_run = dry_run
         self.update_interval = update_interval
         self.console = Console()
-        self.live = Live(self.console)
+        self.live = Live(console=self.console, auto_refresh=False)
 
     def start(self) -> None:
         """Start the live display."""
