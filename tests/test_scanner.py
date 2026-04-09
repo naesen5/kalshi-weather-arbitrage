@@ -14,7 +14,7 @@ class TestScanner:
     def test_scan_opportunities(self, mock_get):
         """Test scanning for weather arbitrage opportunities."""
         mock_response = {
-            "contracts": [
+            "results": [
                 {
                     "id": 1,
                     "weather": "clear",
@@ -27,7 +27,8 @@ class TestScanner:
                     "price": 150.0,
                     "location": {"lat": 46.0, "lon": -91.0},
                 },
-            ]
+            ],
+            "next": None
         }
         mock_get.return_value = mock_response
 
@@ -42,11 +43,12 @@ class TestScanner:
     def test_filter_by_weather(self, mock_get):
         """Test filtering contracts by weather condition."""
         mock_get.return_value = {
-            "contracts": [
+            "results": [
                 {"id": 1, "weather": "clear"},
                 {"id": 2, "weather": "storm"},
                 {"id": 3, "weather": "clear"},
-            ]
+            ],
+            "next": None
         }
 
         client = KalshiClient("api_key", "secret")
