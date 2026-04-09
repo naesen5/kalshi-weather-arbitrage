@@ -68,7 +68,8 @@ class KalshiClient:
             timeout=30,
         )
         response.raise_for_status()
-        return response.json()
+        result: Dict[str, Any] = response.json()
+        return result
 
     def paginate(self, endpoint: str) -> List[Dict[str, Any]]:
         """Fetch all pages from paginated endpoint."""
