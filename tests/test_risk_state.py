@@ -1,8 +1,5 @@
 """Tests for risk state module."""
 
-import json
-import os
-import tempfile
 from datetime import datetime
 
 from kalshi_weather_arb.risk.state import RiskState

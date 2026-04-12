@@ -86,7 +86,7 @@ class PositionSizer:
     ) -> Optional[dict]:
         """
         Check if opportunity should be accepted and return OrderSpec or None.
-        
+
         Opportunity dict must contain:
         - ticker: str
         - side: str
@@ -94,7 +94,7 @@ class PositionSizer:
         - model_prob: float
         - market_prob: float
         - observation_age_minutes: float (optional, defaults to 0)
-        
+
         Returns OrderSpec dict or None if rejected.
         """
         ticker = opportunity.get("ticker")

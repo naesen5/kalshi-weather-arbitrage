@@ -4,7 +4,7 @@ import csv
 import json
 import os
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 # Delayed import to avoid circular dependency
 # from kalshi_weather_arb.trader.ledger import TradeLedger
@@ -65,7 +65,11 @@ class RiskState:
         if self.daily_pnl < -self.circuit_breaker_threshold:
             self.halted = True
             self._save_state()
-            print(f"⚠️ Circuit breaker triggered: daily_pnl={self.daily_pnl:.2f} < -{self.circuit_breaker_threshold}")
+            msg = (
+                f"⚠️ Circuit breaker triggered: daily_pnl={self.daily_pnl:.2f} "
+                f"<-{self.circuit_breaker_threshold}"
+            )
+            print(msg)
 
     def update_from_ledger(self, ledger_path: str) -> None:
         """Update risk state from ledger file."""
