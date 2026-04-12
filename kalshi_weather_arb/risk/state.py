@@ -1,11 +1,13 @@
 """Risk state — track daily exposure, circuit breaker, and persistence."""
 
+import csv
 import json
 import os
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
-from kalshi_weather_arb.trader.ledger import TradeLedger
+# Delayed import to avoid circular dependency
+# from kalshi_weather_arb.trader.ledger import TradeLedger
 
 
 class RiskState:
@@ -65,9 +67,9 @@ class RiskState:
             self._save_state()
             print(f"⚠️ Circuit breaker triggered: daily_pnl={self.daily_pnl:.2f} < -{self.circuit_breaker_threshold}")
 
-    def update_from_ledger(self, ledger: TradeLedger) -> None:
-        """Update risk state from ledger entries."""
-        entries = ledger.read_all()
+    def update_from_ledger(self, ledger_path: str) -> None:
+        """Update risk state from ledger file."""
+        entries = self._read_ledger(ledger_path)
         today = datetime.utcnow().date()
         total_exposure = 0.0
         total_pnl = 0.0
@@ -99,6 +101,17 @@ class RiskState:
         self.last_update = datetime.utcnow()
         self._check_circuit_breaker()
         self._save_state()
+
+    def _read_ledger(self, ledger_path: str) -> List[Dict[str, Any]]:
+        """Read ledger entries from file."""
+        if not os.path.exists(ledger_path):
+            return []
+        entries = []
+        with open(ledger_path, "r", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                entries.append(row)
+        return entries
 
     def can_afford(self, cost_dollars: float) -> bool:
         """Check if risk state can afford this cost."""

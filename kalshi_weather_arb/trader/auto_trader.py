@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Any, Dict
 
 from kalshi_weather_arb.client import KalshiClient
+from kalshi_weather_arb.risk.state import RiskState
 from kalshi_weather_arb.trader.ledger import TradeLedger
 
 
@@ -16,35 +17,6 @@ class TradeResult:
     filled: bool
     dry_run: bool
     status: str = ""
-
-
-class RiskState:
-    """Risk state — track daily exposure."""
-
-    def __init__(self, daily_max: float = 500.0):
-        self.daily_max = daily_max
-        self.daily_exposure = 0.0
-        self.last_update = None
-
-    def update_from_ledger(self, ledger: TradeLedger) -> None:
-        """Update risk state from ledger entries."""
-        entries = ledger.read_all()
-        today = datetime.utcnow().date()
-        total = 0.0
-        for entry in entries:
-            entry_date = datetime.fromisoformat(entry["timestamp"]).date()
-            if entry_date == today:
-                cost = float(entry.get("cost_dollars", 0))
-                fill_price = float(entry.get("fill_price_cents", 0))
-                if fill_price > 0:
-                    total += fill_price / 100.0
-                else:
-                    total += cost
-        self.daily_exposure = total
-
-    def can_afford(self, cost_dollars: float) -> bool:
-        """Check if risk state can afford this cost."""
-        return self.daily_exposure + cost_dollars <= self.daily_max
 
 
 class AutoTrader:

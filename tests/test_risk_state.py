@@ -72,7 +72,7 @@ class TestRiskState:
 
         state_path = str(tmp_path / "risk.json")
         state = RiskState(state_path=state_path)
-        state.update_from_ledger(ledger)
+        state.update_from_ledger(ledger_path)
         assert state.daily_exposure >= 0.0
 
     def test_reset_daily(self, tmp_path):

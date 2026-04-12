@@ -3,7 +3,8 @@
 from unittest.mock import MagicMock
 
 from kalshi_weather_arb.client import KalshiClient
-from kalshi_weather_arb.trader.auto_trader import AutoTrader, RiskState
+from kalshi_weather_arb.risk.state import RiskState
+from kalshi_weather_arb.trader.auto_trader import AutoTrader
 from kalshi_weather_arb.trader.ledger import TradeLedger
 
 
