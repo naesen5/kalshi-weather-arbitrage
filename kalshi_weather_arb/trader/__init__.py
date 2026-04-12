@@ -7,4 +7,11 @@ from kalshi_weather_arb.trader.monitor import TradeMonitor
 # Backward compatibility alias
 Trader = AutoTrader
 
-__all__ = ["AutoTrader", "RiskState", "TradeResult", "TradeLedger", "TradeMonitor", "Trader"]
+__all__ = [
+    "AutoTrader",
+    "RiskState",
+    "TradeResult",
+    "TradeLedger",
+    "TradeMonitor",
+    "Trader",
+]

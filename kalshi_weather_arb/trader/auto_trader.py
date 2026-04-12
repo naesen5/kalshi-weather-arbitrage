@@ -80,7 +80,9 @@ class AutoTrader:
             )
 
         if self.dry_run:
-            order_id = f"dry_run_{ticker}_{side}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+            order_id = (
+                f"dry_run_{ticker}_{side}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+            )
             self.ledger.append_row(
                 timestamp=datetime.utcnow().isoformat(),
                 ticker=ticker,

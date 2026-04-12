@@ -25,11 +25,11 @@ class TestAutoTrader:
 
     def test_load_empty_ledger(self):
         """Test loading empty ledger."""
-        mock_client = Mock()
+        Mock()
         with tempfile.TemporaryDirectory() as tmpdir:
             ledger_path = Path(tmpdir) / "ledger.csv"
             ledger = TradeLedger(str(ledger_path))
-            risk_state = RiskState()
+            RiskState()
             entries = ledger.read_all()
             assert entries == []
 
@@ -70,11 +70,11 @@ class TestAutoTrader:
             # Set risk state to allow the test bet
             risk_state.daily_exposure = 100.0  # below 500 max
             risk_state.daily_max = 500.0
-            
+
             # Create a real KalshiClient and patch its post method
             from kalshi_weather_arb.client import KalshiClient
             client = KalshiClient("https://demo.kalshi.com", "test-key")
-            
+
             with patch.object(client, 'post', return_value=mock_response) as mock_post:
                 trader = AutoTrader(client, ledger, risk_state, dry_run=False)
 
