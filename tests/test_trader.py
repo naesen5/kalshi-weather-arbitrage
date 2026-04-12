@@ -30,7 +30,6 @@ class TestAutoTrader:
             ledger_path = Path(tmpdir) / "ledger.csv"
             ledger = TradeLedger(str(ledger_path))
             risk_state = RiskState()
-            trader = AutoTrader(mock_client, ledger, risk_state)
             entries = ledger.read_all()
             assert entries == []
 

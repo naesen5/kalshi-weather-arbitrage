@@ -1,7 +1,6 @@
 """Tests for trade ledger."""
 
 import os
-import tempfile
 
 from kalshi_weather_arb.trader.ledger import TradeLedger
 
