@@ -26,9 +26,10 @@ class TestRiskState:
         assert state.can_afford(100.0) is True
         assert state.can_afford(600.0) is False
 
-    def test_record_bet_won(self):
+    def test_record_bet_won(self, tmp_path):
         """Test record_bet with won result."""
-        state = RiskState(daily_max=500.0)
+        state_path = str(tmp_path / "risk.json")
+        state = RiskState(state_path=state_path)
         state.record_bet(100.0, "won")
         assert state.daily_pnl == 100.0
 
