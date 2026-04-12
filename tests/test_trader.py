@@ -3,7 +3,6 @@
 from unittest.mock import Mock, patch
 from pathlib import Path
 import tempfile
-import os
 
 from kalshi_weather_arb.trader.auto_trader import AutoTrader, RiskState
 from kalshi_weather_arb.trader.ledger import TradeLedger
@@ -35,11 +34,10 @@ class TestAutoTrader:
             entries = ledger.read_all()
             assert entries == []
 
-    @patch("kalshi_weather_arb.client.KalshiClient.post")
-    def test_dry_run_ledger(self, mock_post):
+    def test_dry_run_ledger(self):
         """Test dry-run mode does not call post."""
         mock_client = Mock()
-        mock_client.post = mock_post
+        mock_client.post = Mock()
 
         with tempfile.TemporaryDirectory() as tmpdir:
             ledger_path = Path(tmpdir) / "ledger.csv"
@@ -47,7 +45,6 @@ class TestAutoTrader:
             risk_state = RiskState()
             trader = AutoTrader(mock_client, ledger, risk_state, dry_run=True)
 
-            # Dry-run mode: no real write
             spec = {
                 "ticker": "CL",
                 "side": "high",
@@ -61,7 +58,7 @@ class TestAutoTrader:
 
             assert result.status == "dry_run"
             assert result.dry_run is True
-            mock_post.assert_not_called()
+            mock_client.post.assert_not_called()
 
     def test_live_mode(self):
         """Test live mode calls post."""
