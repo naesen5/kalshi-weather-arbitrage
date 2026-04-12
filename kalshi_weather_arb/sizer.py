@@ -1,6 +1,32 @@
 """Sizer — Kelly criterion calculator for bet sizing."""
 
+from datetime import datetime
 from typing import Optional
+
+
+class DailyExposure:
+    """Track daily exposure for risk management."""
+
+    def __init__(self, max_exposure: float = 500.0):
+        self.max_exposure = max_exposure
+        self.today = datetime.utcnow().date()
+        self.current_exposure = 0.0
+
+    def add_bet(self, amount: float) -> bool:
+        """Add a bet to current exposure. Returns False if limit exceeded."""
+        if datetime.utcnow().date() != self.today:
+            self.today = datetime.utcnow().date()
+            self.current_exposure = 0.0
+        if self.current_exposure + amount > self.max_exposure:
+            return False
+        self.current_exposure += amount
+        return True
+
+    def can_afford(self, amount: float) -> bool:
+        """Check if this amount can be afforded within limit."""
+        if datetime.utcnow().date() != self.today:
+            return True
+        return self.current_exposure + amount <= self.max_exposure
 
 
 class Sizer:
