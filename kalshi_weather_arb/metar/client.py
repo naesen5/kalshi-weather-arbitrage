@@ -19,6 +19,47 @@ class METARClient:
     def __init__(self):
         self.CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+    def _parse_item(self, item: dict) -> Observation | None:
+        """Parse a raw METAR item into an Observation.
+
+        Args:
+            item: Raw JSON dict from API
+
+        Returns:
+            Observation or None if invalid
+        """
+        if not isinstance(item, dict):
+            return None
+
+        # Parse timestamp
+        obs_time_str = item.get("obsTime", "")
+        if obs_time_str:
+            try:
+                obs_time = datetime.fromisoformat(
+                    obs_time_str.replace("Z", "+00:00")
+                )
+            except ValueError:
+                obs_time = datetime.now()
+        else:
+            obs_time = datetime.now()
+
+        temp_c = item.get("temp", 0.0)
+        if isinstance(temp_c, (int, float)):
+            temp_c = float(temp_c)
+        else:
+            temp_c = 0.0
+
+        dewpoint = item.get("dewpoint")
+        if dewpoint is not None and not isinstance(dewpoint, (int, float)):
+            dewpoint = None
+
+        return Observation(
+            icao=item.get("icaoId", ""),
+            temp_c=temp_c,
+            obs_time=obs_time,
+            dewpoint=dewpoint,
+        )
+
     def fetch(self, stations: list[str]) -> list[Observation]:
         """Fetch observations for multiple stations in a single GET request.
 
@@ -59,39 +100,9 @@ class METARClient:
 
         observations = []
         for item in data:
-            if not isinstance(item, dict):
-                continue
-
-            # Parse timestamp
-            obs_time_str = item.get("obsTime", "")
-            if obs_time_str:
-                # Handle various timestamp formats
-                try:
-                    obs_time = datetime.fromisoformat(
-                        obs_time_str.replace("Z", "+00:00")
-                    )
-                except ValueError:
-                    obs_time = datetime.now()
-            else:
-                obs_time = datetime.now()
-
-            temp_c = item.get("temp", 0.0)
-            if isinstance(temp_c, (int, float)):
-                temp_c = float(temp_c)
-            else:
-                temp_c = 0.0
-
-            dewpoint = item.get("dewpoint")
-            if dewpoint is not None and not isinstance(dewpoint, (int, float)):
-                dewpoint = None
-
-            obs = Observation(
-                icao=item.get("icaoId", ""),
-                temp_c=temp_c,
-                obs_time=obs_time,
-                dewpoint=dewpoint,
-            )
-            observations.append(obs)
+            obs = self._parse_item(item)
+            if obs is not None:
+                observations.append(obs)
 
         return observations
 
