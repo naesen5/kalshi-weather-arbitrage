@@ -1,6 +1,6 @@
 """Tests for METAR client module."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from unittest.mock import patch
 
 import pytest
