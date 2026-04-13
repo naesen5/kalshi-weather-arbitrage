@@ -1,0 +1,14 @@
+[
+  {
+    "icaoId": "KJFK",
+    "temp": -5.5,
+    "obsTime": "2026-04-12T17:30:00Z",
+    "dewpoint": 100.0
+  },
+  {
+    "icaoId": "KORD",
+    "temp": 12.0,
+    "obsTime": "2026-04-12T17:25:00Z",
+    "dewpoint": -50.0
+  }
+]
