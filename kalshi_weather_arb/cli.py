@@ -4,7 +4,7 @@ import argparse
 
 from kalshi_weather_arb.client import KalshiClient
 from kalshi_weather_arb.dashboard.display import Dashboard
-from kalshi_weather_arb.scanner import Scanner
+from kalshi_weather_arb.scanner import ArbitrageScanner
 from kalshi_weather_arb.trader import Trader
 from kalshi_weather_arb.backtest.engine import Backtester
 from kalshi_weather_arb.backtest.data_loader import METARLoader, KalshiPriceLoader
@@ -50,7 +50,7 @@ def parse_args() -> argparse.Namespace:
 def run_loop(dashboard: bool, dry_run: bool, api_key: str, secret_key: str) -> None:
     """Run the arbitrage loop."""
     client = KalshiClient(api_key=api_key, secret_key=secret_key)
-    scanner = Scanner(client)
+    scanner = ArbitrageScanner(client)
     trader = Trader(client)
 
     if dashboard:

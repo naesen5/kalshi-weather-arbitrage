@@ -3,7 +3,7 @@
 from typing import Any, Dict, List, Optional
 
 from kalshi_weather_arb.backtest.data_loader import KalshiPriceLoader, METARLoader
-from kalshi_weather_arb.probability_model import ProbabilityModel
+from kalshi_weather_arb.probability_model import TemperatureProbModel
 
 
 class Backtester:
@@ -15,11 +15,11 @@ class Backtester:
         self,
         metar_loader: METARLoader,
         price_loader: KalshiPriceLoader,
-        model: Optional[ProbabilityModel] = None,
+        model: Optional[TemperatureProbModel] = None,
     ):
         self.metar_loader = metar_loader
         self.price_loader = price_loader
-        self.model = model or ProbabilityModel()
+        self.model = model or TemperatureProbModel()
         self.results: List[Dict[str, Any]] = []
 
     def run_backtest(
@@ -47,7 +47,7 @@ class Backtester:
                 continue
 
             # Calculate probability
-            prob = self.model.calculate_probability(obs["temp_f"], 50.0)
+            prob = self.model.p_exceed(current_temp_f=obs["temp_f"], dewpoint_f=40.0, hour_of_day=12.0, threshold_f=50.0)
 
             # Calculate implied edge
             implied_prob = 1.0 / price
