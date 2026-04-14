@@ -27,6 +27,23 @@ def parse_args() -> argparse.Namespace:
     run_parser.add_argument("--api-key", required=True, help="Kalshi API key")
     run_parser.add_argument("--secret-key", required=True, help="Kalshi secret key")
 
+    # scanner command
+    scanner_parser = subparsers.add_parser(
+        "scanner", help="Scan for arbitrage opportunities"
+    )
+    scanner_parser.add_argument(
+        "--ticker", default="KC", help="Kalshi ticker to scan"
+    )
+    scanner_parser.add_argument(
+        "--min-edge", type=float, default=0.05, help="Minimum edge threshold"
+    )
+    scanner_parser.add_argument(
+        "--api-key", help="Kalshi API key (optional, for live data)"
+    )
+    scanner_parser.add_argument(
+        "--secret-key", help="Kalshi secret key (optional, for live data)"
+    )
+
     # backtest command
     backtest_parser = subparsers.add_parser(
         "backtest", help="Run historical backtest"
@@ -80,6 +97,55 @@ def run_loop(dashboard: bool, dry_run: bool, api_key: str, secret_key: str) -> N
             dash.stop()
 
 
+def run_scanner(ticker: str, min_edge: float, api_key: str = None, secret_key: str = None) -> None:
+    """Run the scanner and print opportunities."""
+    from rich.console import Console
+    from rich.table import Table
+    
+    console = Console()
+    
+    if api_key and secret_key:
+        client = KalshiClient(api_key=api_key, secret_key=secret_key)
+        scanner = ArbitrageScanner(client, min_edge=min_edge)
+    else:
+        from unittest.mock import MagicMock
+        client = MagicMock(spec=KalshiClient)
+        scanner = ArbitrageScanner(client, min_edge=min_edge)
+    
+    console.print(f"[bold blue]Scanning {ticker} markets for arbitrage opportunities...[/bold blue]")
+    console.print()
+    
+    opportunities = list(scanner.scan_opportunities())
+    
+    if not opportunities:
+        console.print("[yellow]No opportunities found.[/yellow]")
+        return
+    
+    table = Table(title=f"Arbitrage Opportunities ({len(opportunities)} found)")
+    table.add_column("Ticker", style="cyan")
+    table.add_column("Station", style="white")
+    table.add_column("Threshold", style="white")
+    table.add_column("Current Temp", style="white")
+    table.add_column("Model Prob", style="green")
+    table.add_column("Market Prob", style="blue")
+    table.add_column("Edge", style="magenta")
+    table.add_column("Ask (¢)", style="yellow")
+    
+    for opp in opportunities:
+        table.add_row(
+            opp.market_ticker,
+            opp.station,
+            f"{opp.threshold_f}°F",
+            f"{opp.current_temp_f:.1f}°F",
+            f"{opp.model_probability:.1%}",
+            f"{opp.market_probability:.1%}",
+            f"{opp.edge:.1%}",
+            str(opp.ask_price_cents),
+        )
+    
+    console.print(table)
+
+
 def main() -> None:
     """CLI entry point."""
     args = parse_args()
@@ -107,6 +173,13 @@ def main() -> None:
         )
         report = BacktestReport()
         report.print_summary(results)
+    elif args.command == "scanner":
+        run_scanner(
+            ticker=args.ticker,
+            min_edge=args.min_edge,
+            api_key=getattr(args, 'api_key', None),
+            secret_key=getattr(args, 'secret_key', None),
+        )
     else:
         print("Usage: python -m kalshi_weather_arb <command>")
-        print("Commands: run")
+        print("Commands: run, scanner, backtest")
