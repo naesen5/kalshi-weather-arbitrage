@@ -86,3 +86,29 @@ class StationMapper:
             if station.get("icao") == icao:
                 return station
         return None
+
+    def get_station(self, city: str) -> Optional[str]:
+        """Get ICAO station code for a city name.
+        
+        Args:
+            city: City name (e.g., "NYC", "Chicago")
+        
+        Returns:
+            ICAO code if match found, None otherwise
+        """
+        # Try matching against city field in stations
+        city_lower = city.lower()
+        for station in self.stations:
+            station_city = station.get("city", "").lower()
+            if city_lower in station_city or station_city in city_lower:
+                return station.get("icao")
+        
+        # Try matching against pattern alternatives
+        for station in self.stations:
+            pattern = station.get("pattern", "").lower()
+            alternatives = [a.strip().lower() for a in pattern.split("|")]
+            for alt in alternatives:
+                if alt == city_lower or city_lower in alt or alt in city_lower:
+                    return station.get("icao")
+        
+        return None

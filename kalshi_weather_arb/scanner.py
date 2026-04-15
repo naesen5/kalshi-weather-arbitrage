@@ -60,10 +60,12 @@ class ArbitrageScanner:
             List of market dicts
         """
         try:
-            if hasattr(self.client, 'get_markets'):
-                return self.client.get_markets(tickers=tickers)
-            else:
-                return []
+            # Use paginate to fetch all markets
+            markets = self.client.paginate('/markets')
+            # Filter to requested tickers
+            if tickers:
+                return [m for m in markets if m.get('ticker', '') in tickers]
+            return markets
         except Exception:
             return []
 
