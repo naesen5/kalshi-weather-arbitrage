@@ -174,7 +174,7 @@ class TestArbitrageScanner:
         mock_client.paginate.return_value = [
             {
                 "category": "weather",
-                "ticker": "TEST-NYC-90",
+                "ticker": "KC-NYC-90",
                 "title": "Will NYC reach 90°F today?",
                 "yesAsk": 40,  # Market prob = 0.4
             },
@@ -238,7 +238,7 @@ class TestArbitrageScanner:
         mock_client = MagicMock(spec=KalshiClient)
         mock_client.paginate.return_value = [
             {
-                "ticker": "TEST-NYC-90",
+                "ticker": "KC-NYC-90",
                 "title": "Will NYC reach 90°F today?",
                 "yesAsk": 40,
             },
@@ -260,6 +260,6 @@ class TestArbitrageScanner:
         
         scanner = ArbitrageScanner(mock_client, metar_client=mock_metar, mapper=mock_mapper, model=mock_model, min_edge=0.05)
         
-        result = scanner.scan_for_ticker("TEST-NYC-90", "NYC")
+        result = scanner.scan_for_ticker("KC-NYC-90", "NYC")
         assert result is not None
         assert isinstance(result, Opportunity)

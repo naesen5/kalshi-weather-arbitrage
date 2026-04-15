@@ -62,9 +62,9 @@ class ArbitrageScanner:
         try:
             # Use paginate to fetch all markets
             markets = self.client.paginate('/markets')
-            # Filter to requested tickers
+            # Filter to requested tickers (check if ticker starts with any prefix)
             if tickers:
-                return [m for m in markets if m.get('ticker', '') in tickers]
+                return [m for m in markets if any(m.get('ticker', '').startswith(t) for t in tickers)]
             return markets
         except Exception:
             return []
