@@ -24,7 +24,7 @@ class TestTemperatureProbModel:
         model = TemperatureProbModel()
         # Current 75°F, threshold 70°F - already exceeded
         prob = model.p_exceed(current_temp_f=75, dewpoint_f=60, hour_of_day=14, threshold_f=70)
-        assert prob > 0.95
+        assert prob >= 0.99
 
     def test_p_exceed_midday_typical_summer(self):
         """Test probability for typical summer midday scenario."""
@@ -80,7 +80,7 @@ class TestTemperatureProbModel:
         model = TemperatureProbModel()
         # 95°F current, 80°F threshold - already exceeded
         prob = model.p_exceed(current_temp_f=95, dewpoint_f=85, hour_of_day=15, threshold_f=80)
-        assert prob > 0.99
+        assert prob >= 0.99
 
     def test_p_exceed_different_hours(self):
         """Test that hour_of_day affects probability."""
