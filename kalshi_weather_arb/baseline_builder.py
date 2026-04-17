@@ -147,7 +147,7 @@ class BaselineBuilder:
                     if current_date is not None and current_day_high is not None:
                         # Record the high for previous day
                         for h in range(24):
-                            if h < len(current_day_temps):
+                            if h < len(current_day_temps) and current_day_temps[h] is not None:
                                 hourly_highs[h].append(current_day_high - current_day_temps[h])
 
                     current_date = date_str

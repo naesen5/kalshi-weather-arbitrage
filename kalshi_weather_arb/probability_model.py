@@ -36,8 +36,9 @@ class TemperatureProbModel:
     # Standard deviation for temperature uncertainty (model uncertainty)
     TEMP_STD_DEV = 4.0  # °F (slightly larger for more uncertainty)
 
-    # Tier 1 certainty threshold
-    TIER1_CERTAINTY = 0.99
+    # Tier 1 certainty (max 97%, scales with margin above threshold)
+    TIER1_CERTAINTY_BASE = 0.90
+    TIER1_CERTAINTY_MARGIN = 0.02
 
     def __init__(self, baselines_dir: Optional[str] = None):
         """
@@ -110,7 +111,10 @@ class TemperatureProbModel:
         """
         # Tier 1: Explicit certainty if current temp >= threshold
         if current_temp_f >= threshold_f:
-            return self.TIER1_CERTAINTY
+            # Scale certainty based on margin above threshold (max 97%)
+            margin = current_temp_f - threshold_f
+            certainty = self.TIER1_CERTAINTY_BASE + (margin * self.TIER1_CERTAINTY_MARGIN)
+            return min(0.97, certainty)
 
         # Tier 2: Use baseline data if available
         baseline = self._load_baseline(station, month)
