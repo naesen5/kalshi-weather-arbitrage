@@ -100,3 +100,44 @@ class TestTemperatureProbModel:
         prob_high_dp = model.p_exceed(current_temp_f=70, dewpoint_f=65, hour_of_day=14, threshold_f=85)
         # Higher dewpoint should mean higher probability
         assert prob_high_dp > prob_low_dp
+
+    def test_p_exceed_with_station_and_month(self):
+        """Test p_exceed with station and month parameters."""
+        model = TemperatureProbModel()
+        # Test with station and month params (uses fallback TIER3 since no baselines)
+        prob = model.p_exceed(current_temp_f=72, dewpoint_f=60, hour_of_day=14, threshold_f=65, station="KJFK", month=4)
+        # Should return valid probability (0-1)
+        assert 0.0 <= prob <= 1.0
+
+    def test_p_exceed_tier1_certainty(self):
+        """Test Tier 1 explicit certainty when current >= threshold."""
+        model = TemperatureProbModel()
+        # Current 72°F, threshold 65°F - current >= threshold → Tier 1
+        prob = model.p_exceed(current_temp_f=72, dewpoint_f=60, hour_of_day=14, threshold_f=65, station="KJFK", month=4)
+        assert prob >= 0.99
+
+    def test_p_exceed_acceptance_criterion_1(self):
+        """Test acceptance criterion 1: p_exceed(72, 65, 14, 4, KJFK) >= 0.90."""
+        model = TemperatureProbModel()
+        prob = model.p_exceed(current_temp_f=72, dewpoint_f=60, hour_of_day=14, threshold_f=65, station="KJFK", month=4)
+        assert prob >= 0.90
+
+    def test_p_exceed_acceptance_criterion_2(self):
+        """Test acceptance criterion 2: p_exceed(45, 70, 7, 1, KJFK) <= 0.15."""
+        model = TemperatureProbModel()
+        prob = model.p_exceed(current_temp_f=45, dewpoint_f=50, hour_of_day=7, threshold_f=70, station="KJFK", month=1)
+        assert prob <= 0.15
+
+    def test_init_with_custom_baselines_dir(self):
+        """Test initialization with custom baselines directory."""
+        model = TemperatureProbModel(baselines_dir="/tmp/test_baselines")
+        assert model.baselines_dir == "/tmp/test_baselines"
+
+    def test_baseline_cache(self):
+        """Test baseline caching."""
+        model = TemperatureProbModel()
+        # First call loads and caches
+        prob1 = model.p_exceed(current_temp_f=70, dewpoint_f=60, hour_of_day=14, threshold_f=75, station="KJFK", month=1)
+        # Second call uses cache
+        prob2 = model.p_exceed(current_temp_f=70, dewpoint_f=60, hour_of_day=14, threshold_f=75, station="KJFK", month=1)
+        assert prob1 == prob2
