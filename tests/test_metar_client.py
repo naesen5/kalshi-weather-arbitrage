@@ -25,12 +25,22 @@ class TestMETARClient:
         # Load fixture
         fixture_path = "tests/fixtures/metar_response.json"
         with open(fixture_path) as f:
-            fixture_data = f.read()
+            f.read()
 
         mock_response = type("MockResponse", (), {})()
         mock_response.json = lambda: [
-            {"icaoId": "KJFK", "temp": -5.5, "obsTime": "2026-04-12T17:30:00Z", "dewpoint": 100.0},
-            {"icaoId": "KORD", "temp": 12.0, "obsTime": "2026-04-12T17:25:00Z", "dewpoint": -50.0},
+            {
+                "icaoId": "KJFK",
+                "temp": -5.5,
+                "obsTime": "2026-04-12T17:30:00Z",
+                "dewpoint": 100.0,
+            },
+            {
+                "icaoId": "KORD",
+                "temp": 12.0,
+                "obsTime": "2026-04-12T17:25:00Z",
+                "dewpoint": -50.0,
+            },
         ]
         mock_response.raise_for_status = lambda: None
         mock_get.return_value = mock_response
@@ -81,12 +91,15 @@ class TestMETARClient:
     @patch("requests.get")
     def test_fetch_timeout_retry(self, mock_get):
         """Test fetch retries on failure."""
+
         # First call raises exception, second succeeds
         def side_effect(*args, **kwargs):
             if mock_get.call_count == 1:
                 raise requests.exceptions.Timeout("Timeout")
             mock_response = type("MockResponse", (), {})()
-            mock_response.json = lambda: [{"icaoId": "KJFK", "temp": 10.0, "obsTime": "2026-04-12T17:30:00Z"}]
+            mock_response.json = lambda: [
+                {"icaoId": "KJFK", "temp": 10.0, "obsTime": "2026-04-12T17:30:00Z"}
+            ]
             mock_response.raise_for_status = lambda: None
             return mock_response
 

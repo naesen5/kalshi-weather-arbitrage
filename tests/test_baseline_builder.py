@@ -1,7 +1,5 @@
 """Tests for baseline_builder.py."""
 
-import json
-import os
 import tempfile
 from unittest.mock import patch
 
@@ -35,21 +33,21 @@ class TestBaselineBuilder:
     def test_build_all_baselines_single_year(self):
         """Test build_all_baselines with single year."""
         builder = BaselineBuilder()
-        with patch.object(builder, '_build_baseline_for_station_year') as mock_build:
+        with patch.object(builder, "_build_baseline_for_station_year") as mock_build:
             summary = builder.build_all_baselines([2023])
-            assert summary['stations_processed'] == 12
-            assert summary['years_processed'] == 12  # 12 stations
-            assert summary['files_created'] == 12
+            assert summary["stations_processed"] == 12
+            assert summary["years_processed"] == 12  # 12 stations
+            assert summary["files_created"] == 12
             assert mock_build.call_count == 12
 
     def test_build_all_baselines_multiple_years(self):
         """Test build_all_baselines with multiple years."""
         builder = BaselineBuilder()
-        with patch.object(builder, '_build_baseline_for_station_year') as mock_build:
+        with patch.object(builder, "_build_baseline_for_station_year") as mock_build:
             summary = builder.build_all_baselines([2023, 2024])
-            assert summary['stations_processed'] == 12
-            assert summary['years_processed'] == 24  # 12 stations * 2 years
-            assert summary['files_created'] == 24
+            assert summary["stations_processed"] == 12
+            assert summary["years_processed"] == 24  # 12 stations * 2 years
+            assert summary["files_created"] == 24
             assert mock_build.call_count == 24
 
     def test_build_all_baselines_with_errors(self):

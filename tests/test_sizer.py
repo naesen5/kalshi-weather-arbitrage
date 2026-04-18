@@ -1,6 +1,5 @@
 """Tests for sizer module."""
 
-import pytest
 from kalshi_weather_arb.sizer import DailyExposure, Sizer
 
 

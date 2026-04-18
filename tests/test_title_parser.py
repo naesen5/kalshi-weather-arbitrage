@@ -1,6 +1,5 @@
 """Tests for temperature market title parser."""
 
-import pytest
 from kalshi_weather_arb.title_parser import parse_temperature_title, TitleParsed
 
 

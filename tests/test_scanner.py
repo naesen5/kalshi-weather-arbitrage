@@ -1,9 +1,8 @@
 """Tests for ArbitrageScanner class."""
 
 from datetime import datetime, timezone
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
-import pytest
 
 from kalshi_weather_arb.client import KalshiClient
 from kalshi_weather_arb.metar.client import METARClient
@@ -21,7 +20,7 @@ class TestArbitrageScanner:
         """Test default initialization."""
         mock_client = MagicMock(spec=KalshiClient)
         scanner = ArbitrageScanner(mock_client)
-        
+
         assert scanner.client == mock_client
         assert isinstance(scanner.metar_client, METARClient)
         assert isinstance(scanner.mapper, StationMapper)
@@ -103,7 +102,9 @@ class TestArbitrageScanner:
         mock_metar.fetch.return_value = []
         mock_mapper = MagicMock(spec=StationMapper)
         mock_mapper.get_station.return_value = "KJFK"
-        scanner = ArbitrageScanner(mock_client, metar_client=mock_metar, mapper=mock_mapper)
+        scanner = ArbitrageScanner(
+            mock_client, metar_client=mock_metar, mapper=mock_mapper
+        )
         opportunities = list(scanner.scan_opportunities())
         assert opportunities == []
 
@@ -119,7 +120,7 @@ class TestArbitrageScanner:
             },
         ]
         mock_metar = MagicMock(spec=METARClient)
-        
+
         # METAR from 2 hours ago
         now = datetime.now(timezone.utc)
         old_hour = now.hour - 2
@@ -132,10 +133,15 @@ class TestArbitrageScanner:
         mock_obs.dewpoint = 15.0
         mock_obs.obs_time = old_time
         mock_metar.fetch.return_value = [mock_obs]
-        
+
         mock_mapper = MagicMock(spec=StationMapper)
         mock_mapper.get_station.return_value = "KJFK"
-        scanner = ArbitrageScanner(mock_client, metar_client=mock_metar, mapper=mock_mapper, max_obs_age_minutes=10.0)
+        scanner = ArbitrageScanner(
+            mock_client,
+            metar_client=mock_metar,
+            mapper=mock_mapper,
+            max_obs_age_minutes=10.0,
+        )
         opportunities = list(scanner.scan_opportunities())
         assert opportunities == []
 
@@ -151,7 +157,7 @@ class TestArbitrageScanner:
             },
         ]
         mock_metar = MagicMock(spec=METARClient)
-        
+
         # Mock METAR and model to give low probability
         mock_obs = MagicMock(spec=Observation)
         mock_obs.icao = "KJFK"
@@ -159,14 +165,20 @@ class TestArbitrageScanner:
         mock_obs.dewpoint = 40.0
         mock_obs.obs_time = datetime.now(timezone.utc)
         mock_metar.fetch.return_value = [mock_obs]
-        
+
         mock_mapper = MagicMock(spec=StationMapper)
         mock_mapper.get_station.return_value = "KJFK"
-        
+
         mock_model = MagicMock(spec=TemperatureProbModel)
         mock_model.p_exceed.return_value = 0.5  # Low probability
-        
-        scanner = ArbitrageScanner(mock_client, metar_client=mock_metar, mapper=mock_mapper, model=mock_model, min_edge=0.10)
+
+        scanner = ArbitrageScanner(
+            mock_client,
+            metar_client=mock_metar,
+            mapper=mock_mapper,
+            model=mock_model,
+            min_edge=0.10,
+        )
         opportunities = list(scanner.scan_opportunities())
         assert opportunities == []
 
@@ -182,7 +194,7 @@ class TestArbitrageScanner:
             },
         ]
         mock_metar = MagicMock(spec=METARClient)
-        
+
         # Mock METAR for NYC
         mock_obs = MagicMock(spec=Observation)
         mock_obs.icao = "KJFK"
@@ -190,14 +202,20 @@ class TestArbitrageScanner:
         mock_obs.dewpoint = 70.0  # Humid
         mock_obs.obs_time = datetime.now(timezone.utc)
         mock_metar.fetch.return_value = [mock_obs]
-        
+
         mock_mapper = MagicMock(spec=StationMapper)
         mock_mapper.get_station.return_value = "KJFK"
-        
+
         mock_model = MagicMock(spec=TemperatureProbModel)
         mock_model.p_exceed.return_value = 0.8  # High probability
-        
-        scanner = ArbitrageScanner(mock_client, metar_client=mock_metar, mapper=mock_mapper, model=mock_model, min_edge=0.05)
+
+        scanner = ArbitrageScanner(
+            mock_client,
+            metar_client=mock_metar,
+            mapper=mock_mapper,
+            model=mock_model,
+            min_edge=0.05,
+        )
         opportunities = list(scanner.scan_opportunities())
         assert len(opportunities) >= 1
 
@@ -246,22 +264,28 @@ class TestArbitrageScanner:
             },
         ]
         mock_metar = MagicMock(spec=METARClient)
-        
+
         mock_obs = MagicMock(spec=Observation)
         mock_obs.icao = "KJFK"
         mock_obs.temp_c = 80.0
         mock_obs.dewpoint = 70.0
         mock_obs.obs_time = datetime.now(timezone.utc)
         mock_metar.fetch.return_value = [mock_obs]
-        
+
         mock_mapper = MagicMock(spec=StationMapper)
         mock_mapper.get_station.return_value = "KJFK"
-        
+
         mock_model = MagicMock(spec=TemperatureProbModel)
         mock_model.p_exceed.return_value = 0.8
-        
-        scanner = ArbitrageScanner(mock_client, metar_client=mock_metar, mapper=mock_mapper, model=mock_model, min_edge=0.05)
-        
+
+        scanner = ArbitrageScanner(
+            mock_client,
+            metar_client=mock_metar,
+            mapper=mock_mapper,
+            model=mock_model,
+            min_edge=0.05,
+        )
+
         result = scanner.scan_for_ticker("KC-NYC-90", "NYC")
         assert result is not None
         assert isinstance(result, Opportunity)

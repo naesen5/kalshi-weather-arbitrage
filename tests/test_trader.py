@@ -73,9 +73,10 @@ class TestAutoTrader:
 
             # Create a real KalshiClient and patch its post method
             from kalshi_weather_arb.client import KalshiClient
+
             client = KalshiClient("https://demo.kalshi.com", "test-key")
 
-            with patch.object(client, 'post', return_value=mock_response) as mock_post:
+            with patch.object(client, "post", return_value=mock_response) as mock_post:
                 trader = AutoTrader(client, ledger, risk_state, dry_run=False)
 
                 spec = {

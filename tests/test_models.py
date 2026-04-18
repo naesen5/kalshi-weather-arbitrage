@@ -1,6 +1,5 @@
 """Tests for Opportunity dataclass."""
 
-import pytest
 from kalshi_weather_arb.models import Opportunity
 
 

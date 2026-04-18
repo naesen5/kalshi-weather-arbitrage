@@ -1,7 +1,6 @@
 """Tests for backtest data loader."""
 
 
-
 from kalshi_weather_arb.backtest.data_loader import KalshiPriceLoader, METARLoader
 
 
