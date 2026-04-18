@@ -121,9 +121,11 @@ class TestArbitrageScanner:
         mock_metar = MagicMock(spec=METARClient)
         
         # METAR from 2 hours ago
-        old_time = datetime.now(timezone.utc).replace(
-            hour=datetime.now(timezone.utc).hour - 2
-        )
+        now = datetime.now(timezone.utc)
+        old_hour = now.hour - 2
+        if old_hour < 0:
+            old_hour += 24
+        old_time = now.replace(hour=old_hour, minute=0, second=0, microsecond=0)
         mock_obs = MagicMock(spec=Observation)
         mock_obs.icao = "KJFK"
         mock_obs.temp_c = 20.0
