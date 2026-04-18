@@ -144,3 +144,10 @@ class TestTemperatureProbModel:
         # Second call uses cache
         prob2 = model.p_exceed(current_temp_f=70, dewpoint_f=60, hour_of_day=14, threshold_f=75, station="KJFK", month=1)
         assert prob1 == prob2
+
+    def test_p_exceed_with_custom_baselines_dir(self):
+        """Test p_exceed with custom baselines directory."""
+        model = TemperatureProbModel(baselines_dir="/tmp/test_baselines")
+        prob = model.p_exceed(current_temp_f=70, dewpoint_f=60, hour_of_day=14, threshold_f=75, station="KJFK", month=1)
+        # Should use fallback Tier 3 since no baselines exist
+        assert 0.0 <= prob <= 1.0
