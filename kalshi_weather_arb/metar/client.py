@@ -35,9 +35,7 @@ class METARClient:
         obs_time_str = item.get("obsTime", "")
         if obs_time_str:
             try:
-                obs_time = datetime.fromisoformat(
-                    obs_time_str.replace("Z", "+00:00")
-                )
+                obs_time = datetime.fromisoformat(obs_time_str.replace("Z", "+00:00"))
             except ValueError:
                 obs_time = datetime.now()
         else:

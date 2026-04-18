@@ -81,7 +81,7 @@ def parse_temperature_title(title: str) -> Optional[TitleParsed]:
         city = match3.group(1).strip()
         try:
             lower = int(match3.group(2))
-            upper = int(match3.group(3))
+            int(match3.group(3))
         except ValueError:
             return None
         return TitleParsed(

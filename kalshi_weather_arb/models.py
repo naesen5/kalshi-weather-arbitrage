@@ -1,7 +1,6 @@
 """Data models for arbitrage scanner."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass

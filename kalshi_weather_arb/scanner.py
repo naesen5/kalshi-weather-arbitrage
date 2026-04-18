@@ -61,10 +61,14 @@ class ArbitrageScanner:
         """
         try:
             # Use paginate to fetch all markets
-            markets = self.client.paginate('/markets')
+            markets = self.client.paginate("/markets")
             # Filter to requested tickers (check if ticker starts with any prefix)
             if tickers:
-                return [m for m in markets if any(m.get('ticker', '').startswith(t) for t in tickers)]
+                return [
+                    m
+                    for m in markets
+                    if any(m.get("ticker", "").startswith(t) for t in tickers)
+                ]
             return markets
         except Exception:
             return []
@@ -128,15 +132,13 @@ class ArbitrageScanner:
             Age in minutes
         """
         from datetime import datetime, timezone
-        
+
         obs_time_str = metar.get("obsTime", "")
         if not obs_time_str:
             return 999.0
 
         try:
-            obs_time = datetime.fromisoformat(
-                obs_time_str.replace("Z", "+00:00")
-            )
+            obs_time = datetime.fromisoformat(obs_time_str.replace("Z", "+00:00"))
         except ValueError:
             return 999.0
 
@@ -160,11 +162,11 @@ class ArbitrageScanner:
             Tuple of (probability, temp_f, dewpoint_f)
         """
         from datetime import datetime, timezone
-        
+
         # Convert Celsius to Fahrenheit
         temp_c = metar.get("temp", 0.0)
         dewpoint_c = metar.get("dewpoint")
-        
+
         temp_f = temp_c * 9.0 / 5.0 + 32.0
         dewpoint_f = dewpoint_c * 9.0 / 5.0 + 32.0 if dewpoint_c is not None else 32.0
 
@@ -174,21 +176,19 @@ class ArbitrageScanner:
             hour_of_day = 12.0
         else:
             try:
-                obs_time = datetime.fromisoformat(
-                    obs_time_str.replace("Z", "+00:00")
-                )
+                obs_time = datetime.fromisoformat(obs_time_str.replace("Z", "+00:00"))
             except ValueError:
                 obs_time = datetime.now(timezone.utc)
-        
+
         hour_of_day = obs_time.hour + (obs_time.minute / 60.0)
-        
+
         prob = self.model.p_exceed(
             current_temp_f=temp_f,
             dewpoint_f=dewpoint_f,
             hour_of_day=hour_of_day,
             threshold_f=threshold_f,
         )
-        
+
         return prob, temp_f, dewpoint_f
 
     def scan_opportunities(self) -> Generator[Opportunity, None, None]:
@@ -200,7 +200,7 @@ class ArbitrageScanner:
             by more than min_edge threshold.
         """
         markets = self._get_markets(tickers=["KC", "KT"])
-        
+
         for market in markets:
             if market.get("category") != "weather":
                 continue

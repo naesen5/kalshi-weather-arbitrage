@@ -28,7 +28,9 @@ class BaselineBuilder:
     ]
 
     # NOAA ISD URL pattern (replace {station} and {year})
-    ISD_URL_PATTERN = "https://ghpdap01.heotherg.com/data/isd/{station}/{station}{year}.isd"
+    ISD_URL_PATTERN = (
+        "https://ghpdap01.heotherg.com/data/isd/{station}/{station}{year}.isd"
+    )
 
     def __init__(self, output_dir: Optional[str] = None):
         """
@@ -108,7 +110,9 @@ class BaselineBuilder:
         # For now, return placeholder
         return None
 
-    def _parse_isd_to_hourly_rises(self, isd_data: str, year: int) -> Dict[str, Dict[str, float]]:
+    def _parse_isd_to_hourly_rises(
+        self, isd_data: str, year: int
+    ) -> Dict[str, Dict[str, float]]:
         """
         Parse ISD data to extract hourly rise distributions.
 
@@ -119,7 +123,7 @@ class BaselineBuilder:
         Returns:
             Dict mapping hour (0-23) to rise stats {mean_rise_f, std_rise_f, count}
         """
-        hourly_temps = defaultdict(list)  # hour -> list of temps
+        defaultdict(list)  # hour -> list of temps
         hourly_highs = defaultdict(list)  # hour -> list of daily highs
 
         # Parse ISD format (simplified)
@@ -139,7 +143,7 @@ class BaselineBuilder:
             if match:
                 date_str = match.group(1)  # YYYYMMDD
                 hour = int(match.group(2))
-                minute = int(match.group(3))
+                int(match.group(3))
                 temp = float(match.group(4))
 
                 if current_date != date_str:
@@ -147,8 +151,13 @@ class BaselineBuilder:
                     if current_date is not None and current_day_high is not None:
                         # Record the high for previous day
                         for h in range(24):
-                            if h < len(current_day_temps) and current_day_temps[h] is not None:
-                                hourly_highs[h].append(current_day_high - current_day_temps[h])
+                            if (
+                                h < len(current_day_temps)
+                                and current_day_temps[h] is not None
+                            ):
+                                hourly_highs[h].append(
+                                    current_day_high - current_day_temps[h]
+                                )
 
                     current_date = date_str
                     current_day_temps = [None] * 24
@@ -171,7 +180,7 @@ class BaselineBuilder:
             if rises:
                 mean_rise = sum(rises) / len(rises)
                 variance = sum((r - mean_rise) ** 2 for r in rises) / len(rises)
-                std_rise = variance ** 0.5
+                std_rise = variance**0.5
                 hourly_rises[str(hour)] = {
                     "mean_rise_f": round(mean_rise, 2),
                     "std_rise_f": round(std_rise, 2),
@@ -185,7 +194,9 @@ def main():
     """Main entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Build temperature probability baselines")
+    parser = argparse.ArgumentParser(
+        description="Build temperature probability baselines"
+    )
     parser.add_argument(
         "--years",
         nargs="+",

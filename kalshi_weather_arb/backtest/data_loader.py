@@ -4,7 +4,6 @@ import os
 from typing import Any, Dict, List
 
 
-
 class METARLoader:
     """Loader for historical METAR observations."""
 
@@ -32,16 +31,12 @@ class METARLoader:
 class KalshiPriceLoader:
     """Loader for historical Kalshi price data."""
 
-    def __init__(
-        self, api_key: str, cache_dir: str = "backtest/cache"
-    ):
+    def __init__(self, api_key: str, cache_dir: str = "backtest/cache"):
         self.api_key = api_key
         self.cache_dir = cache_dir
         os.makedirs(cache_dir, exist_ok=True)
 
-    def load_kalshi_price_history(
-        self, ticker: str
-    ) -> List[Dict[str, Any]]:
+    def load_kalshi_price_history(self, ticker: str) -> List[Dict[str, Any]]:
         """Load Kalshi price history for a ticker."""
         # For now, return synthetic data
         # TODO: Implement actual Kalshi API call

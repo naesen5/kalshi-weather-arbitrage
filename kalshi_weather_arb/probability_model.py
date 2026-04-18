@@ -53,7 +53,7 @@ class TemperatureProbModel:
             # Default to model/baselines/ relative to this module
             module_dir = os.path.dirname(os.path.abspath(__file__))
             self.baselines_dir = os.path.join(module_dir, "model", "baselines")
-        
+
         # Cache for loaded baselines
         self._baseline_cache: Dict[str, Dict[str, Any]] = {}
 
@@ -113,7 +113,9 @@ class TemperatureProbModel:
         if current_temp_f >= threshold_f:
             # Scale certainty based on margin above threshold (max 97%)
             margin = current_temp_f - threshold_f
-            certainty = self.TIER1_CERTAINTY_BASE + (margin * self.TIER1_CERTAINTY_MARGIN)
+            certainty = self.TIER1_CERTAINTY_BASE + (
+                margin * self.TIER1_CERTAINTY_MARGIN
+            )
             return min(0.97, certainty)
 
         # Tier 2: Use baseline data if available
@@ -244,7 +246,9 @@ class TemperatureProbModel:
         # and typically higher daily high
         # Reference dewpoint: 55°F (moderate humidity)
         REFERENCE_DEWPOINT = 55.0
-        DEWPOINT_FACTOR = 0.5  # Each °F dewpoint adds 0.5°F to expected high (stronger effect)
+        DEWPOINT_FACTOR = (
+            0.5  # Each °F dewpoint adds 0.5°F to expected high (stronger effect)
+        )
         dewpoint_adjustment = (dewpoint_f - REFERENCE_DEWPOINT) * DEWPOINT_FACTOR
 
         # Current temp adjustment: if current temp is already high,
@@ -252,10 +256,17 @@ class TemperatureProbModel:
         # If current temp is low, there's more room to rise
         CURRENT_TEMP_REFERENCE = 70.0  # Reference current temp
         TEMP_ADJUSTMENT_FACTOR = 0.2  # Stronger adjustment for current temp
-        current_temp_adjustment = (current_temp_f - CURRENT_TEMP_REFERENCE) * TEMP_ADJUSTMENT_FACTOR
+        current_temp_adjustment = (
+            current_temp_f - CURRENT_TEMP_REFERENCE
+        ) * TEMP_ADJUSTMENT_FACTOR
 
         # Expected daily high = current + adjustments
-        expected_high = current_temp_f + base_adjustment + dewpoint_adjustment + current_temp_adjustment
+        expected_high = (
+            current_temp_f
+            + base_adjustment
+            + dewpoint_adjustment
+            + current_temp_adjustment
+        )
 
         return expected_high
 
