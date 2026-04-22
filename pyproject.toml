@@ -22,6 +22,7 @@ dev = [
 line-length = 90
 target-version = "py311"
 select = ["E", "F", "W", "C", "B"]
+ignore = ["C901"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]

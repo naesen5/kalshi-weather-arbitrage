@@ -33,7 +33,8 @@ class StationMapper:
         Uses fuzzy matching against station patterns.
 
         Args:
-            market_title: Kalshi market title (e.g., "Will it be hotter than 90 in NYC on July 15?")
+            market_title: Kalshi market title (e.g.,
+                "Will it be hotter than 90 in NYC on July 15?")
 
         Returns:
             ICAO code if match found, None otherwise
@@ -68,10 +69,13 @@ class StationMapper:
             import re
 
             # Match alt as whole word or at start/end of string
-            if re.search(
-                rf"\b{re.escape(alt)}\b|^{re.escape(alt)}$|\b{re.escape(alt)}$|^{re.escape(alt)}\b",
-                text,
-            ):
+            pattern = (
+                rf"\b{re.escape(alt)}\b|"
+                rf"^{re.escape(alt)}$|"
+                rf"\b{re.escape(alt)}$|"
+                rf"^{re.escape(alt)}\b"
+            )
+            if re.search(pattern, text):
                 return True
 
         return False
