@@ -13,7 +13,7 @@ class TestKalshiClient:
     def test_sign_request(self):
         """Test HMAC-SHA256 signature generation."""
         client = KalshiClient("api_key_123", "secret_key_456")
-        sig = client._sign_request("GET", "/api/v1/test")
+        sig = client._sign_request("GET", "/api/v1/test", "2024-01-01T00:00:00Z")
         assert "HMAC api_key_123:" in sig
         assert ":" in sig
 

@@ -226,3 +226,35 @@ class Position:
             Total P&L in cents
         """
         return self.realized_pnl + self.unrealized_pnl(current_price)
+
+
+@dataclass
+class Opportunity:
+    """
+    Represents an arbitrage opportunity.
+
+    Attributes:
+        market_ticker: Kalshi market ticker symbol
+        market_title: Market title
+        station: ICAO station code
+        current_temp_f: Current temperature in Fahrenheit
+        obs_age_minutes: Age of METAR observation in minutes
+        threshold_f: Temperature threshold in Fahrenheit
+        model_probability: Model-calculated probability
+        market_probability: Market implied probability
+        edge: Difference (model - market)
+        ask_price_cents: Ask price in cents
+        recommended_side: 'yes' or 'no'
+    """
+
+    market_ticker: str
+    market_title: str
+    station: str
+    current_temp_f: float
+    obs_age_minutes: float
+    threshold_f: float
+    model_probability: float
+    market_probability: float
+    edge: float
+    ask_price_cents: int
+    recommended_side: str
