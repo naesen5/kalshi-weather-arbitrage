@@ -73,8 +73,18 @@ class TestKalshiClient:
         mock_response.raise_for_status = Mock()
         mock_response.json.return_value = {
             "ticks": [
-                {"ts_ms": 1704067200000, "open": 50, "close": 55, "high": 60, "low": 48, "volume": 1000},
-                {"ts_ms": 1704153600000, "open": 55, "close": 52, "high": 58, "low": 50, "volume": 800},
+                {
+                    "ts_ms": 1704067200000,
+                    "open": 50, "close": 55,
+                    "high": 60, "low": 48,
+                    "volume": 1000,
+                },
+                {
+                    "ts_ms": 1704153600000,
+                    "open": 55, "close": 52,
+                    "high": 58, "low": 50,
+                    "volume": 800,
+                },
             ]
         }
         mock_get.return_value = mock_response

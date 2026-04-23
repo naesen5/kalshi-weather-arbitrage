@@ -89,7 +89,12 @@ class TestKalshiPriceLoader:
         """Test that results are cached to disk."""
         mock_client = Mock()
         mock_client.get_historical_candlesticks.return_value = [
-            {"ts_ms": 1704067200000, "open": 50, "close": 55, "high": 60, "low": 48, "volume": 1000},
+            {
+                "ts_ms": 1704067200000,
+                "open": 50, "close": 55,
+                "high": 60, "low": 48,
+                "volume": 1000,
+            },
         ]
         mock_client_class.return_value = mock_client
 
