@@ -75,14 +75,18 @@ class TestKalshiClient:
             "ticks": [
                 {
                     "ts_ms": 1704067200000,
-                    "open": 50, "close": 55,
-                    "high": 60, "low": 48,
+                    "open": 50,
+                    "close": 55,
+                    "high": 60,
+                    "low": 48,
                     "volume": 1000,
                 },
                 {
                     "ts_ms": 1704153600000,
-                    "open": 55, "close": 52,
-                    "high": 58, "low": 50,
+                    "open": 55,
+                    "close": 52,
+                    "high": 58,
+                    "low": 50,
                     "volume": 800,
                 },
             ]

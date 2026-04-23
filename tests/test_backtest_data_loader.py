@@ -91,8 +91,10 @@ class TestKalshiPriceLoader:
         mock_client.get_historical_candlesticks.return_value = [
             {
                 "ts_ms": 1704067200000,
-                "open": 50, "close": 55,
-                "high": 60, "low": 48,
+                "open": 50,
+                "close": 55,
+                "high": 60,
+                "low": 48,
                 "volume": 1000,
             },
         ]
