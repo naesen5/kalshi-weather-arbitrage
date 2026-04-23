@@ -29,7 +29,9 @@ class METARLoader:
         safe_name = f"{station}_{start_date}_{end_date}".replace("/", "_")
         return os.path.join(self.cache_dir, f"metar_{safe_name}.json")
 
-    def _load_from_cache(self, station: str, start_date: str, end_date: str) -> Optional[List[Dict[str, Any]]]:
+    def _load_from_cache(
+        self, station: str, start_date: str, end_date: str
+    ) -> Optional[List[Dict[str, Any]]]:
         """Load cached temperature data if available."""
         cache_path = self._get_cache_path(station, start_date, end_date)
         if os.path.exists(cache_path):
@@ -40,7 +42,9 @@ class METARLoader:
                 return None
         return None
 
-    def _save_to_cache(self, station: str, start_date: str, end_date: str, data: List[Dict[str, Any]]) -> None:
+    def _save_to_cache(
+        self, station: str, start_date: str, end_date: str, data: List[Dict[str, Any]]
+    ) -> None:
         """Save temperature data to cache."""
         cache_path = self._get_cache_path(station, start_date, end_date)
         try:

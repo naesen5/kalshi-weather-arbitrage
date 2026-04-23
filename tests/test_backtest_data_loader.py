@@ -1,7 +1,5 @@
 """Tests for backtest data loader."""
 
-import json
-from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 
 from kalshi_weather_arb.backtest.data_loader import KalshiPriceLoader, METARLoader
