@@ -159,7 +159,9 @@ def main() -> None:
             f"{args.start} to {args.end}"
         )
         metar_loader = METARLoader()
-        price_loader = KalshiPriceLoader(api_key=os.environ.get("KALSHI_API_KEY", "dummy"))
+        price_loader = KalshiPriceLoader(
+            api_key=os.environ.get("KALSHI_API_KEY", "dummy")
+        )
         backtester = Backtester(metar_loader, price_loader)
         results = backtester.run_backtest(
             station=args.station,
