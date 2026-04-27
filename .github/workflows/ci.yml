@@ -24,3 +24,29 @@ jobs:
       - name: Run mypy type checker
         run: |
           mypy kalshi_weather_arb/ --ignore-missing-imports || true
+
+  secret-detection:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Scanning for hardcoded secrets..."
+          FOUND=0
+
+          # Check for common secret patterns in Python source files
+          if grep -rn --include="*.py" \
+            -E "(secret[_-]?key|api[_-]?key|password|token)\s*=\s*['\"][^'\"{}$][^'\"{}$]*['\"]" \
+            --exclude-dir=".venv" --exclude-dir="__pycache__" --exclude-dir="tests" \
+            . 2>/dev/null | grep -v "os\.environ" | grep -v "getenv" | grep -v "Field(" | grep -v "#" | grep -v "None" | grep -v "CHANGE" | grep -v "<change" | grep -v "placeholder" | grep -v "example" | grep -v "dummy" | head -20; then
+            echo "⚠️ Potential hardcoded secrets found!"
+            FOUND=1
+          fi
+
+          if [[ $FOUND -eq 1 ]]; then
+            echo "❌ Secret detection failed. Review the output above."
+            exit 1
+          fi
+
+          echo "✅ No hardcoded secrets detected."
