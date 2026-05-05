@@ -1,0 +1,8 @@
+repos:
+  - repo: https://github.com/ThreatPipe/detect-secrets
+    rev: v1.0.0
+    hooks:
+      - id: detect-secrets
+        args:
+          - --additional-secrets-path
+          - .secrets.baseline
