@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "requests>=2.31,<3",
     "rich>=13,<15",
+    "pyyaml>=6,<7",
 ]
 
 [project.optional-dependencies]
@@ -18,9 +19,10 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 90
 target-version = "py311"
 select = ["E", "F", "W", "C", "B"]
+ignore = ["C901"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]

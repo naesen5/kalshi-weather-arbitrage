@@ -80,3 +80,26 @@ class KalshiClient:
             results.extend(data.get("results", []))
             next_url = data.get("next")
         return results
+
+    def get_historical_candlesticks(
+        self,
+        ticker: str,
+        frames: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Fetch historical candlestick data for a market.
+
+        Args:
+            ticker: Market ticker (e.g., 'KC-JFK-90')
+            frames: Candlestick frame size (e.g., '1day', '1hour').
+                    If None, Kalshi returns the default frame.
+
+        Returns:
+            List of candlestick dicts with keys: ts_ms, open, close, high, low, volume
+
+        Raises:
+            requests.exceptions.HTTPError: On 4xx/5xx API errors.
+        """
+        path = f"/api/v1/historical/markets/{ticker}/candlesticks"
+        params = {"frames": frames} if frames else None
+        data = self.get(path, params=params)
+        return data.get("ticks", [])

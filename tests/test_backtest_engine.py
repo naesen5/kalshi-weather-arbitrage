@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from kalshi_weather_arb.backtest.data_loader import KalshiPriceLoader, METARLoader
 from kalshi_weather_arb.backtest.engine import Backtester
-from kalshi_weather_arb.probability_model import ProbabilityModel
+from kalshi_weather_arb.probability_model import TemperatureProbModel
 
 
 class TestBacktester:
@@ -14,7 +14,7 @@ class TestBacktester:
         """Test running backtest with synthetic data."""
         metar_loader = MagicMock(spec=METARLoader)
         price_loader = MagicMock(spec=KalshiPriceLoader)
-        model = MagicMock(spec=ProbabilityModel)
+        model = MagicMock(spec=TemperatureProbModel)
 
         metar_loader.load_metar_history.return_value = [
             {"station": "KJFK", "timestamp": "2025-01-01T00:00:00Z", "temp_f": 45.0}
@@ -22,7 +22,7 @@ class TestBacktester:
         price_loader.load_kalshi_price_history.return_value = [
             {"ticker": "KC", "timestamp": "2025-01-01T00:00:00Z", "price": 100.0}
         ]
-        model.calculate_probability.return_value = 0.6
+        model.p_exceed.return_value = 0.6
 
         backtester = Backtester(metar_loader, price_loader, model)
         results = backtester.run_backtest(
@@ -39,11 +39,11 @@ class TestBacktester:
         """Test backtest with no matching data."""
         metar_loader = MagicMock(spec=METARLoader)
         price_loader = MagicMock(spec=KalshiPriceLoader)
-        model = MagicMock(spec=ProbabilityModel)
+        model = MagicMock(spec=TemperatureProbModel)
 
         metar_loader.load_metar_history.return_value = []
         price_loader.load_kalshi_price_history.return_value = []
-        model.calculate_probability.return_value = 0.6
+        model.p_exceed.return_value = 0.6
 
         backtester = Backtester(metar_loader, price_loader, model)
         results = backtester.run_backtest(

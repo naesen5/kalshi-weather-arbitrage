@@ -1,0 +1,134 @@
+# Station mapping for Kalshi temperature markets
+# ICAO code -> city name, region, and matching Kalshi market pattern
+
+stations:
+  # Major US cities with active Kalshi temp markets
+  - icao: "KJFK"
+    city: "New York"
+    region: "NY"
+    pattern: "New York|NYC|Manhattan"
+  
+  - icao: "KLAX"
+    city: "Los Angeles"
+    region: "CA"
+    pattern: "Los Angeles|LA|Southern California"
+  
+  - icao: "KORD"
+    city: "Chicago"
+    region: "IL"
+    pattern: "Chicago|IL|Illinois"
+  
+  - icao: "KMDW"
+    city: "Chicago"
+    region: "IL"
+    pattern: "Chicago|IL|Illinois"
+  
+  - icao: "KDFW"
+    city: "Dallas"
+    region: "TX"
+    pattern: "Dallas|DFW|Fort Worth|Texas"
+  
+  - icao: "KDEN"
+    city: "Denver"
+    region: "CO"
+    pattern: "Denver|CO|Colorado"
+  
+  - icao: "KSFO"
+    city: "San Francisco"
+    region: "CA"
+    pattern: "San Francisco|SF|Bay Area|Northern California"
+  
+  - icao: "KSEA"
+    city: "Seattle"
+    region: "WA"
+    pattern: "Seattle|WA|Washington"
+  
+  - icao: "KBOS"
+    city: "Boston"
+    region: "MA"
+    pattern: "Boston|MA|Massachusetts"
+  
+  - icao: "KMIA"
+    city: "Miami"
+    region: "FL"
+    pattern: "Miami|FL|Florida"
+  
+  - icao: "KPHX"
+    city: "Phoenix"
+    region: "AZ"
+    pattern: "Phoenix|AZ|Arizona"
+  
+  - icao: "KATL"
+    city: "Atlanta"
+    region: "GA"
+    pattern: "Atlanta|GA|Georgia"
+  
+  - icao: "KLAS"
+    city: "Las Vegas"
+    region: "NV"
+    pattern: "Las Vegas|Vegas|LV|Nevada"
+  
+  - icao: "KIAD"
+    city: "Washington DC"
+    region: "DC"
+    pattern: "Washington|DC|D\\.C|Alexandria"
+  
+  - icao: "KCLT"
+    city: "Charlotte"
+    region: "NC"
+    pattern: "Charlotte|NC|North Carolina"
+  
+  - icao: "KDET"
+    city: "Detroit"
+    region: "MI"
+    pattern: "Detroit|MI|Michigan"
+  
+  - icao: "KMSP"
+    city: "Minneapolis"
+    region: "MN"
+    pattern: "Minneapolis|MN|Minnesota"
+  
+  - icao: "KPDX"
+    city: "Portland"
+    region: "OR"
+    pattern: "Portland|OR|Oregon"
+  
+  - icao: "KSLC"
+    city: "Salt Lake City"
+    region: "UT"
+    pattern: "Salt Lake City|SLC|Utah"
+  
+  - icao: "KTPA"
+    city: "Tampa"
+    region: "FL"
+    pattern: "Tampa|FL|Florida"
+  
+  - icao: "KAUS"
+    city: "Austin"
+    region: "TX"
+    pattern: "Austin|TX|Texas"
+  
+  - icao: "KPHL"
+    city: "Philadelphia"
+    region: "PA"
+    pattern: "Philadelphia|PA|Pennsylvania"
+  
+  - icao: "KSAN"
+    city: "San Diego"
+    region: "CA"
+    pattern: "San Diego|SD|Southern California"
+  
+  - icao: "KEWR"
+    city: "Newark"
+    region: "NJ"
+    pattern: "Newark|NJ|New Jersey"
+  
+  - icao: "KBWI"
+    city: "Baltimore"
+    region: "MD"
+    pattern: "Baltimore|MD|Maryland"
+  
+  - icao: "KIAD"
+    city: "Reston"
+    region: "VA"
+    pattern: "Reston|VA|Virginia"
